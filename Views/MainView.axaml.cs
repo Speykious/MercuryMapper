@@ -1,4 +1,4 @@
- using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,6 +32,7 @@ using MercuryMapper.Views.Select;
 using MercuryMapper.Views.Tools;
 using SkiaSharp;
 using Tomlyn;
+using Xdg.Directories;
 
 namespace MercuryMapper.Views;
 
@@ -40,6 +41,11 @@ public partial class MainView : UserControl
     public MainView()
     {
         ChartEditor = new(this);
+
+        Directory.CreateDirectory(ConfigDir);
+        Directory.CreateDirectory(StateDir);
+        ConfigPath = $"{ConfigDir}/UserConfig.toml";
+        TimeTrackerPath = $"{StateDir}/TimeTracker";
 
         InitializeComponent();
         LoadUserConfig();
@@ -74,10 +80,12 @@ public partial class MainView : UserControl
     }
 
     public bool CanShutdown;
+    private readonly string ConfigDir = $"{BaseDirectory.ConfigHome}/MercuryMapper";
+    private readonly string StateDir = $"{BaseDirectory.StateHome}/MercuryMapper";
+    private readonly string ConfigPath;
+    private readonly string TimeTrackerPath;
     public const string AppVersion = "v4.0.8";
     public const string ServerVersion = "1.0.1";
-    private const string ConfigPath = "UserConfig.toml";
-    private const string TimeTrackerPath = "TimeTracker";
 
     public UserConfig UserConfig = new();
     public readonly KeybindEditor KeybindEditor;
